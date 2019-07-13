@@ -1,4 +1,16 @@
-create or replace PACKAGE BODY sypks_user_login
+CREATE OR REPLACE PACKAGE sypks_user_login
+IS
+PROCEDURE pr_login(user_login_nameIN IN VARCHAR2,passwordIN IN VARCHAR2);
+PROCEDURE pr_logout(user_login_nameIN IN VARCHAR2);
+PROCEDURE pr_get_user_info(user_login_nameIN IN VARCHAR2);
+PROCEDURE pr_unblock_user(user_login_nameIN IN VARCHAR2);
+PROCEDURE pr_registration(user_login_nameIN IN VARCHAR2, passwordIN IN VARCHAR2, emailIN IN VARCHAR2);
+PROCEDURE pr_change_password(user_login_nameIN IN VARCHAR2,new_pass IN VARCHAR2);
+FUNCTION pr_ip_address_register(user_name_IN IN VARCHAR2 ,ip_addressIN IN VARCHAR2) RETURN NUMBER;
+FUNCTION hash_key (v_input IN VARCHAR2) RETURN dbms_obfuscation_toolkit.varchar2_checksum;
+END sypks_user_login;
+/
+CREATE OR REPLACE PACKAGE BODY sypks_user_login
 IS
 -------------------------------------------------------------------------
 PROCEDURE pr_logout(user_login_nameIN IN VARCHAR2)
@@ -28,12 +40,13 @@ BEGIN
     DECLARE
         counter                  INTEGER;
         flag                     INTEGER;
-        status                   VARCHAR2(2);
         hash_pass                VARCHAR2(255);
         ip_address_restriction   VARCHAR2(255);
         change_pass_months       NUMBER;
         login_date               DATE;
         last_pass_change         DATE;
+        status                   VARCHAR(2);
+        v_ld                     login_data;
         wrong_pass_or_username EXCEPTION;
         wrong_pass EXCEPTION;
         block_user_exception EXCEPTION;
@@ -66,7 +79,10 @@ BEGIN
         WHERE
             user_login_name = user_login_namein;
 
-        IF ( flag = 1 AND status = 'E' AND counter < 6 ) THEN
+        IF ( flag = 1) THEN
+            IF(status='BP' OR status = 'B') THEN
+                 RAISE block_user_exception;
+                 END IF;
             IF ( ip_address_restriction = 'yes' AND pr_ip_address_register(user_login_namein, '192.0.2.1') = 0  ) THEN
                 RAISE ip_address_exception;
             ELSE
@@ -82,14 +98,15 @@ BEGIN
                         force_password_change = 'should change'
                     WHERE
                         user_login_name = user_login_namein;
+                        v_ld:= login_data(1,'Dear ' || user_login_namein || ' you should change your password','/'); 
+                        v_ld.print_values;
 
-                    dbms_output.put_line('Dear '
-                                         || user_login_namein
-                                         || ' you should change your password');
                 ELSE
+                
                     dbms_output.put_line('Congratulations '
                                          || user_login_namein
                                          || ' you are successfully login ');
+                    
                     UPDATE sytb_user
                     SET
                         last_login = SYSDATE,
@@ -103,12 +120,15 @@ BEGIN
         END IF;
 
         IF ( flag != 1 ) THEN
+
+
+
             IF ( counter = 5 ) THEN
                 UPDATE sytb_user
                 SET
                     user_status = 'BP'
                 WHERE
-                    user_login_name = user_login_namein;
+                user_login_name = user_login_namein;
 
                 RAISE block_user_exception;
             ELSE
@@ -118,7 +138,6 @@ BEGIN
                     last_login = SYSDATE
                 WHERE
                     user_login_name = user_login_namein;
-
                 RAISE wrong_pass;
             END IF;
 
@@ -127,17 +146,21 @@ BEGIN
 
     EXCEPTION
         WHEN no_data_found THEN
-            dbms_output.put_line('There is no user with username: ' || user_login_namein);
+                            v_ld:= login_data(0,'There is no user with username:'  || user_login_namein,'001');
+                            v_ld.print_values;
         WHEN wrong_pass THEN
-            dbms_output.put_line('Wrong password you have '
-                                 ||(5 - counter)
-                                 || ' tries');
+                            v_ld:= login_data(0,'Wrong password you have ' || (5 - counter) || ' tries','002');
+                            v_ld.print_values;
         WHEN wrong_pass_or_username THEN
-            dbms_output.put_line('Wrong password you have or username');
+                            v_ld:= login_data(0,'Wrong password or username' ,'003');
+                            v_ld.print_values;
         WHEN block_user_exception THEN
-            dbms_output.put_line('Your status is blocked');
+                            v_ld:= login_data(0,'Your status is blocked' ,'004');
+                            v_ld.print_values;
         WHEN ip_address_exception THEN
-            dbms_output.put_line('Access denied');
+                            v_ld:= login_data(0,'Your status is blocked' ,'005');
+                            v_ld.print_values;
+
     END;
 END;
 ---------------------------------------------------------------  
@@ -181,7 +204,7 @@ UPDATE sytb_user
 SET user_status = 'E',login_counter=0
 WHERE user_login_name = user_login_nameIN;
 IF SQL%NOTFOUND THEN
-  DBMS_OUTPUT.PUT_LINE('There is no user with username: ' || user_login_nameIN);
+            RAISE NO_DATA_FOUND;
   ELSE 
   DBMS_OUTPUT.PUT_LINE('User status enabled');
 END IF;
