@@ -1,3 +1,8 @@
+CREATE OR REPLACE PACKAGE sypks_transactions
+IS
+PROCEDURE create_transaction(my_acc IN INTEGER, IBAN IN VARCHAR2,amountIN IN NUMBER, descriptionIN IN VARCHAR2);
+END;
+/
 CREATE OR REPLACE PACKAGE BODY sypks_transactions
 IS
 PROCEDURE create_transaction(my_acc IN INTEGER, IBAN IN VARCHAR2,
