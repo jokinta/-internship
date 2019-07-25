@@ -23,7 +23,7 @@ public class ChangeAccStatusService {
 		try {
 			Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "c##jokinta", "root2");
 
-			CallableStatement callStatement = conn.prepareCall("{call change_acc_status(?,?,?)}");
+			CallableStatement callStatement = conn.prepareCall("{call sypks_accounts.change_acc_status(?,?,?)}");
 			callStatement.setString(1, accStatus.getUser_id());
 			callStatement.setString(2, accStatus.getNew_status());
 			callStatement.registerOutParameter(3, OracleTypes.STRUCT, "STATUS_INFO");

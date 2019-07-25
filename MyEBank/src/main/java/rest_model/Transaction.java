@@ -4,14 +4,15 @@ import java.math.BigDecimal;
 
 public class Transaction {
 	private String my_acc;
-	private String IBAN;
+	private String iban;
 	private BigDecimal amount;
 	private String description;
 	
+	public Transaction() {}
 	
-	public Transaction(String my_acc, String iBAN, String amount, String description) {
+	public Transaction(String my_acc, String iban, String amount,String description) {
 		this.my_acc = my_acc;
-		this.IBAN = iBAN;
+		this.iban = iban;
 		this.amount = new BigDecimal(amount);
 		this.description = description;
 	}
@@ -22,24 +23,29 @@ public class Transaction {
 	public void setMy_acc(String my_acc) {
 		this.my_acc = my_acc;
 	}
-	public String getIBAN() {
-		return IBAN;
+	public String getIban() {
+		return iban;
 	}
-	public void setIBAN(String iBAN) {
-		IBAN = iBAN;
+	public void setIban(String iban) {
+		this.iban = iban;
 	}
 	public BigDecimal getAmount() {
 		return amount;
 	}
+
 	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
+
 	public String getDescription() {
 		return description;
 	}
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
+	
+	
 	
 	
 

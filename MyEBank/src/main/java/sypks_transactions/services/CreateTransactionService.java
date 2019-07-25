@@ -7,12 +7,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Struct;
 
-
 import org.springframework.stereotype.Service;
 
 import model.StatusInfo;
-import rest_model.Transaction;
 import oracle.jdbc.OracleTypes;
+import rest_model.Transaction;
 
 @Service
 public class CreateTransactionService {
@@ -24,19 +23,19 @@ public class CreateTransactionService {
 		try {
 			Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "c##jokinta", "root2");
 
-			CallableStatement callStatement = conn.prepareCall("{call create_transaction(?,?,?,?,?}");
-			callStatement.setString(1, transaction.getMy_acc());
-			callStatement.setString(2, transaction.getIBAN());
+			CallableStatement callStatement = conn.prepareCall("{call sypks_transactions.create_transaction(?,?,?,?,?)}");
+			callStatement.setString(1,transaction.getMy_acc());
+			callStatement.setString(2, transaction.getIban());
 			callStatement.setBigDecimal(3, transaction.getAmount());
-			callStatement.setString(5, transaction.getDescription());
-            callStatement.registerOutParameter(5, OracleTypes.STRUCT, "STATUS_INFO");
-
+			callStatement.setString(4, transaction.getDescription());
+			callStatement.registerOutParameter(5, OracleTypes.STRUCT, "STATUS_INFO");
+        
 			callStatement.execute();
 
 			Struct struct = (Struct) callStatement.getObject(5);
 
 			Object[] object = struct.getAttributes();
-			
+
 			statusInfo = new StatusInfo((String) object[0], (String) object[1], (String) object[2]);
 
 		}

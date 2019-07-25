@@ -5,41 +5,47 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 
 import java.sql.DriverManager;
-import java.sql.Types;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+
 
 import org.springframework.stereotype.Service;
 
-import model.StatusInfo;
+import model.TuroverInfo;
+import oracle.jdbc.OracleCallableStatement;
+import oracle.jdbc.OracleTypes;
 import rest_model.Turnover;
 
 @Service
-public class GetTurnoverService {
 
-	StatusInfo statusInfo;
+public class GetTurnoverService {
+	ArrayList<TuroverInfo> turovers = new ArrayList< TuroverInfo>();
+
+	TuroverInfo turoverInfo;
 
 	public void getTurover(Turnover turnover) {
 
 		try {
 
 			Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "c##jokinta", "root2");
-			CallableStatement callStatement = conn.prepareCall("{call create_account(?,?,?,?,?)}");
+			CallableStatement callStatement = conn.prepareCall("{call getTurnover2(?,?,?,?)}");
 			callStatement.setString(1, turnover.getAccount_id());
-			callStatement.setDate(2, turnover.getFrom_date());
-			callStatement.setDate(3, turnover.getEnd_date());
-			callStatement.registerOutParameter (4,Types.DOUBLE);
-			callStatement.registerOutParameter (5,Types.DOUBLE);
-
-
+			callStatement.setString(2, turnover.getFrom_date());
+			callStatement.setString(3, turnover.getEnd_date());
+			callStatement.registerOutParameter(4, OracleTypes.CURSOR);
 			callStatement.execute();
-		    Double credit_sum = callStatement.getDouble(4);
-		    Double debit_sum = callStatement.getDouble(5);
+		      ResultSet rs = ((OracleCallableStatement)callStatement).getCursor(4);
+		      while (rs.next()) {
+		    	  turoverInfo = new TuroverInfo(rs.getString(1),rs.getString(2),rs.getBigDecimal(3),rs.getBigDecimal(4),rs.getString(5),rs.getDate(6),rs.getString(7)) ;
+		    	  turovers.add(turoverInfo);
+		      }
+		      rs.close();
 
-            System.out.println("Credit sum->" + credit_sum);
-            System.out.println("Debit sum->" + debit_sum);
-
-
+       
 		}
+		  
 
+	
 		catch (Exception e)
 
 		{
@@ -48,7 +54,13 @@ public class GetTurnoverService {
 
 		}
 	}
+	
+	public ArrayList<TuroverInfo> getStatus() {
+			return turovers;
+
+		}
+	
+	}
 
 
 
-}

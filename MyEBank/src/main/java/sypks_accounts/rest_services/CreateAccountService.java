@@ -23,7 +23,7 @@ public class CreateAccountService {
 		try {
 			Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "c##jokinta", "root2");
 
-			CallableStatement callStatement = conn.prepareCall("{call create_account(?,?,?,?)}");
+			CallableStatement callStatement = conn.prepareCall("{call sypks_accounts.create_account(?,?,?,?)}");
 			callStatement.setString(1, account.getUser_id());
 			callStatement.setString(2, account.getCurrency());
 		     callStatement.setBigDecimal(3,account.getDeposit());
