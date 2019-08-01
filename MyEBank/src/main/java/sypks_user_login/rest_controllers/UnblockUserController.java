@@ -13,7 +13,7 @@ import rest_model.User;
 import sypks_user_login.rest_services.UnblockUserService;
 
 @RestController
-@RequestMapping("/unblockuser")
+@RequestMapping("admin/unblockuser")
 
 public class UnblockUserController {
 	UnblockUserService unblockUserService = new UnblockUserService();

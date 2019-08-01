@@ -13,7 +13,7 @@ import rest_model.ChangePassword;
 import sypks_user_login.rest_services.ChangePasswordService;
 
 @RestController
-@RequestMapping("/changepassword")
+@RequestMapping("user/changepassword")
 
 public class ChangePasswordController {
 	ChangePasswordService changePasswordService = new ChangePasswordService();

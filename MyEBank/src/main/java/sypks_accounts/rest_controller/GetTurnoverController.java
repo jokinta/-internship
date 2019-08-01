@@ -12,7 +12,7 @@ import rest_model.Turnover;
 import sypks_accounts.rest_services.GetTurnoverService;
 
 @RestController
-@RequestMapping("/getturnover")
+@RequestMapping("user/getturnover")
 
 public class GetTurnoverController {
 	GetTurnoverService turoverService = new GetTurnoverService();

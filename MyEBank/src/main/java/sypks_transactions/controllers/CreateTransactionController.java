@@ -11,7 +11,7 @@ import rest_model.Transaction;
 import sypks_transactions.services.CreateTransactionService;
 
 @RestController
-@RequestMapping("/createtransaction")
+@RequestMapping("user/createtransaction")
 
 public class CreateTransactionController {
 	CreateTransactionService createTransactionService = new CreateTransactionService();

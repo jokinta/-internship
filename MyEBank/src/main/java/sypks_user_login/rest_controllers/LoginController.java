@@ -11,7 +11,7 @@ import rest_model.User;
 import sypks_user_login.rest_services.LoginService;
 
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/login/oauth2")
 
 public class LoginController {
 	LoginService log = new LoginService();

@@ -11,7 +11,7 @@ import rest_model.Account;
 import sypks_accounts.rest_services.CreateAccountService;
 
 @RestController
-@RequestMapping("/createacc")
+@RequestMapping("user/createacc")
 
 public class CreateAccountController {
 	CreateAccountService createAccount = new CreateAccountService();

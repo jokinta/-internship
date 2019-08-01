@@ -11,7 +11,7 @@ import rest_model.AccountStatus;
 import sypks_accounts.rest_services.ChangeAccStatusService;
 
 @RestController
-@RequestMapping("/changeaccstatus")
+@RequestMapping("admin/changeaccstatus")
 
 public class ChangeAccountStatusController {
 	ChangeAccStatusService changeAccStatus = new ChangeAccStatusService();
