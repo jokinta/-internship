@@ -1,0 +1,20 @@
+@charset "ISO-8859-1";
+body {
+ background-image: url(../images/background.jpg);
+ }
+input{
+	width: 300px;
+  height: 30px;
+
+}
+input[type=text]:focus {
+
+    border: 3px solid #555;
+}
+
+
+form{
+   margin:50px 0px; padding:0px;
+    text-align:center;
+    align:center;
+}

@@ -4,6 +4,7 @@ import java.security.Principal;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,8 +27,8 @@ public class SpringBootWebAppApplicationSecurity {
 	}
 
 	@RequestMapping("/validateUser")
-	public Principal user(Principal user) {
-		return user;
-	}
+	  public String currentUserName(Principal principal) {
+	     return principal.getName();
+	  }
 	
 }

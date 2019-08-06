@@ -1,6 +1,11 @@
 Manifest-Version: 1.0
-Implementation-Title: SpringBootWebApp
+Implementation-Title: spring-security-auth-server
 Implementation-Version: 0.0.1-SNAPSHOT
-Build-Jdk-Spec: 1.8
+Built-By: Jokinta
+Implementation-Vendor-Id: com.techprimers.security
+Build-Jdk: 1.8.0_211
+Implementation-URL: http://projects.spring.io/spring-boot/spring-secur
+ ity-auth-server/
 Created-By: Maven Integration for Eclipse
+Implementation-Vendor: Pivotal Software, Inc.
 
